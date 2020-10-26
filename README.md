@@ -15,6 +15,7 @@
         <!-- production version, optimized for size and speed -->
         <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     ```
-
+## Attribute binding
+- Shorthand for `v-bind:<tag>` is simply `:<tag>`
 
 [1]:https://vuejs.org/v2/guide/
