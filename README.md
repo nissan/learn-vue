@@ -27,7 +27,7 @@
 ## Conditional Rendering
 
 - `v-if` inserts or removes elements into the DOM. It's more efficient to use `v-show` which will toggle the display property on and off.
-- 
+
 From [docs][2]:
 
 >...prefer `v-show` if you need to toggle something very often, and prefer `v-if` if the condition is unlikely to change at runtime.
