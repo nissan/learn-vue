@@ -17,6 +17,9 @@
             </div>
             <div class="product-info">
                 <h1>{{product}}</h1>
+                <p v-show="inventory > 10"> In Stock</p>
+                <p v-show="inventory<=10 && inventory>0">Almost out of stock</p>
+                <p v-show="inventory===0">Out of stock</p>
             </div>
         </div>
     </div>
