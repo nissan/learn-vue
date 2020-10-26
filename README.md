@@ -1,5 +1,4 @@
-# learn-vue
-Learning Vue (2 then 3)
+# Learning Vue (2 then 3)
 
 ## First Steps
 - Create HTML file index.html
