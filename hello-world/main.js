@@ -1,6 +1,7 @@
 var app = new Vue({
     el: '#app',
     data: {
+        brand: "Big Brand Name",
         product: 'Socks',
         image: './assets/vmSocks-green-onWhite.jpg',
         inventory: 0,
@@ -25,6 +26,11 @@ var app = new Vue({
         },
         updateProduct(variantImage) {
             this.image = variantImage
+        }
+    },
+    computed: {
+        title() {
+            return this.brand + ' ' + this.product
         }
     }
 })
