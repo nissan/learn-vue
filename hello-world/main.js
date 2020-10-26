@@ -17,13 +17,13 @@ var app = new Vue({
                 variantImage: './assets/vmSocks-blue-onWhite.jpg'
             }
         ],
-        cart:0
+        cart: 0
     },
     methods: {
-        addToCart: function () {
+        addToCart() {
             this.cart += 1
         },
-        updateProduct: function(variantImage) {
+        updateProduct(variantImage) {
             this.image = variantImage
         }
     }
