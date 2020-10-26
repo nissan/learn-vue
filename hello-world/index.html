@@ -20,10 +20,15 @@
                 <p v-show="inventory > 10"> In Stock</p>
                 <p v-show="inventory<=10 && inventory>0">Almost out of stock</p>
                 <p v-show="inventory===0">Out of stock</p>
+                <ul>
+                    <li v-for="detail in details" >
+                        {{detail}}
+                    </li>
+                </ul>
+                <div v-for="variant in variants" :key="variant.variantId">
+                    <p>{{variant.variantColor}}</p>
+                </div>
             </div>
-            <ul>
-                <li v-for="detail in details">{{detail}}</li>
-            </ul>
         </div>
     </div>
     <!-- development version, includes helpful console warnings -->
