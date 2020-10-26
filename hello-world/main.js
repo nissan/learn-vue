@@ -1,4 +1,10 @@
 Vue.component('product', {
+    props: {
+       premium :{
+           type: Boolean,
+           required: true
+       } 
+    },
     template: `
         <div class="product">
             <div class="product-image">
@@ -9,6 +15,7 @@ Vue.component('product', {
                 <p v-show="inventory > 10"> In Stock</p>
                 <p v-show="inventory<=10 && inventory>0">Almost out of stock</p>
                 <p v-show="inventory===0">Out of stock</p>
+                <p> User is premium: {{ premium }}</p>
                 <ul>
                     <li v-for="detail in details">
                         {{detail}}
@@ -75,5 +82,8 @@ Vue.component('product', {
 })
 var app = new Vue({
     el: '#app',
+    data: {
+        premium:true
+    }
 
 })
