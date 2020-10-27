@@ -1,3 +1,43 @@
+var eventBus = new Vue();
+Vue.component('product-tabs', {
+    props: {
+        reviews: {
+            type: Array,
+            required: true
+
+        }
+    },
+    template: `
+        <div>
+            <span class="tab"
+                :class="{activeTab: selectedTab===tab}"
+                v-for="(tab, index) in tabs" 
+                :key="index"
+                @click="selectedTab=tab">
+                {{tab}}
+            </span>
+            <div v-show="selectedTab === 'Reviews'">
+                <p v-if="!reviews.length">There are no reviews yet.</p>
+                <ul>
+                    <li v-for="review in reviews">
+                        <p>{{review.name}}</p>
+                        <p>Rating: {{review.rating}}</p>
+                        <p>{{review.review}}</p>
+                    </li>
+                </ul>
+            </div>
+            <product-review 
+            v-show="selectedTab === 'Make a Review'">
+            </product-review>
+        </div>
+    `,
+    data() {
+        return {
+            tabs: ['Reviews', 'Make a Review'],
+            selectedTab: 'Reviews'
+        }
+    }
+})
 Vue.component('product-review', {
     template: `
     <form class="review-form" @submit.prevent="onSubmit">
@@ -31,27 +71,27 @@ Vue.component('product-review', {
     </form>
     `,
     data() {
-        return{
+        return {
             name: null,
             review: null,
             rating: null,
-            errors:[]
+            errors: []
         }
     },
     methods: {
         onSubmit() {
-            this.errors=[]
-            if (this.name && this.review && this.rating){
+            this.errors = []
+            if (this.name && this.review && this.rating) {
 
                 let productReview = {
                     name: this.name,
                     review: this.review,
                     rating: this.rating
                 }
-                this.$emit('review-submitted', productReview);
-                this.name=null;
-                this.review=null;
-                this.rating=null;
+                eventBus.$emit('review-submitted', productReview);
+                this.name = null;
+                this.review = null;
+                this.rating = null;
             }
             else {
                 if (!this.name) this.errors.push("Name required.")
@@ -63,10 +103,10 @@ Vue.component('product-review', {
 })
 Vue.component('product', {
     props: {
-       premium :{
-           type: Boolean,
-           required: true
-       } 
+        premium: {
+            type: Boolean,
+            required: true
+        }
     },
     template: `
         <div class="product">
@@ -96,18 +136,8 @@ Vue.component('product', {
 
                     Add to Cart</button>
             </div>
-            <div>
-                <h2>Reviews</h2>
-                <p v-if="!reviews.length">There are no reviews yet.</p>
-                <ul>
-                    <li v-for="review in reviews">
-                        <p>{{review.name}}</p>
-                        <p>Rating: {{review.rating}}</p>
-                        <p>{{review.review}}</p>
-                    </li>
-                </ul>
-            </div>
-            <product-review @review-submitted="addReview"></product-review>
+            <product-tabs :reviews="reviews"></product-tabs>
+
         </div>`,
     data() {
         return {
@@ -130,7 +160,7 @@ Vue.component('product', {
                         variantQuantity: 0
                     }
                 ],
-                reviews:[]
+            reviews: []
         }
     },
     methods: {
@@ -139,9 +169,6 @@ Vue.component('product', {
         },
         updateProduct(index) {
             this.selectedVariant = index
-        },
-        addReview(productReview) {
-            this.reviews.push(productReview)
         }
     },
     computed: {
@@ -154,15 +181,20 @@ Vue.component('product', {
         inventory() {
             return this.variants[this.selectedVariant].variantQuantity
         },
-        shipping(){
-            return this.premium? "Free": "2.99"
+        shipping() {
+            return this.premium ? "Free" : "2.99"
         }
+    },
+    mounted() {
+        eventBus.$on('review-submitted', productReview => {
+            this.reviews.push(productReview)
+        })
     }
-})
+});
 var app = new Vue({
     el: '#app',
     data: {
-        premium:true,
+        premium: true,
         cart: []
     },
     methods: {
