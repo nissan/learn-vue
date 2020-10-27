@@ -1,8 +1,9 @@
+var eventBus = new Vue();
 Vue.component('product-tabs', {
     props: {
-        reviews : {
+        reviews: {
             type: Array,
-            required:true
+            required: true
 
         }
     },
@@ -26,14 +27,13 @@ Vue.component('product-tabs', {
                 </ul>
             </div>
             <product-review 
-            v-show="selectedTab === 'Make a Review'"
-            @review-submitted="addReview">
+            v-show="selectedTab === 'Make a Review'">
             </product-review>
         </div>
     `,
     data() {
         return {
-            tabs:['Reviews', 'Make a Review'],
+            tabs: ['Reviews', 'Make a Review'],
             selectedTab: 'Reviews'
         }
     }
@@ -71,27 +71,27 @@ Vue.component('product-review', {
     </form>
     `,
     data() {
-        return{
+        return {
             name: null,
             review: null,
             rating: null,
-            errors:[]
+            errors: []
         }
     },
     methods: {
         onSubmit() {
-            this.errors=[]
-            if (this.name && this.review && this.rating){
+            this.errors = []
+            if (this.name && this.review && this.rating) {
 
                 let productReview = {
                     name: this.name,
                     review: this.review,
                     rating: this.rating
                 }
-                this.$emit('review-submitted', productReview);
-                this.name=null;
-                this.review=null;
-                this.rating=null;
+                eventBus.$emit('review-submitted', productReview);
+                this.name = null;
+                this.review = null;
+                this.rating = null;
             }
             else {
                 if (!this.name) this.errors.push("Name required.")
@@ -103,10 +103,10 @@ Vue.component('product-review', {
 })
 Vue.component('product', {
     props: {
-       premium :{
-           type: Boolean,
-           required: true
-       } 
+        premium: {
+            type: Boolean,
+            required: true
+        }
     },
     template: `
         <div class="product">
@@ -160,7 +160,7 @@ Vue.component('product', {
                         variantQuantity: 0
                     }
                 ],
-            reviews:[]
+            reviews: []
         }
     },
     methods: {
@@ -169,9 +169,6 @@ Vue.component('product', {
         },
         updateProduct(index) {
             this.selectedVariant = index
-        },
-        addReview(productReview) {
-            this.reviews.push(productReview)
         }
     },
     computed: {
@@ -184,15 +181,20 @@ Vue.component('product', {
         inventory() {
             return this.variants[this.selectedVariant].variantQuantity
         },
-        shipping(){
-            return this.premium? "Free": "2.99"
+        shipping() {
+            return this.premium ? "Free" : "2.99"
         }
+    },
+    mounted() {
+        eventBus.$on('review-submitted', productReview => {
+            this.reviews.push(productReview)
+        })
     }
-})
+});
 var app = new Vue({
     el: '#app',
     data: {
-        premium:true,
+        premium: true,
         cart: []
     },
     methods: {
