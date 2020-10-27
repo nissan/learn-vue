@@ -1,3 +1,43 @@
+Vue.component('product-tabs', {
+    props: {
+        reviews : {
+            type: Array,
+            required:true
+
+        }
+    },
+    template: `
+        <div>
+            <span class="tab"
+                :class="{activeTab: selectedTab===tab}"
+                v-for="(tab, index) in tabs" 
+                :key="index"
+                @click="selectedTab=tab">
+                {{tab}}
+            </span>
+            <div v-show="selectedTab === 'Reviews'">
+                <p v-if="!reviews.length">There are no reviews yet.</p>
+                <ul>
+                    <li v-for="review in reviews">
+                        <p>{{review.name}}</p>
+                        <p>Rating: {{review.rating}}</p>
+                        <p>{{review.review}}</p>
+                    </li>
+                </ul>
+            </div>
+            <product-review 
+            v-show="selectedTab === 'Make a Review'"
+            @review-submitted="addReview">
+            </product-review>
+        </div>
+    `,
+    data() {
+        return {
+            tabs:['Reviews', 'Make a Review'],
+            selectedTab: 'Reviews'
+        }
+    }
+})
 Vue.component('product-review', {
     template: `
     <form class="review-form" @submit.prevent="onSubmit">
@@ -96,18 +136,8 @@ Vue.component('product', {
 
                     Add to Cart</button>
             </div>
-            <div>
-                <h2>Reviews</h2>
-                <p v-if="!reviews.length">There are no reviews yet.</p>
-                <ul>
-                    <li v-for="review in reviews">
-                        <p>{{review.name}}</p>
-                        <p>Rating: {{review.rating}}</p>
-                        <p>{{review.review}}</p>
-                    </li>
-                </ul>
-            </div>
-            <product-review @review-submitted="addReview"></product-review>
+            <product-tabs :reviews="reviews"></product-tabs>
+
         </div>`,
     data() {
         return {
@@ -130,7 +160,7 @@ Vue.component('product', {
                         variantQuantity: 0
                     }
                 ],
-                reviews:[]
+            reviews:[]
         }
     },
     methods: {
